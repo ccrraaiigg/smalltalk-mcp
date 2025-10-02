@@ -4,8 +4,7 @@ an MCP server for livecoding a remote Smalltalk
 ## Overview
 
 This project enables AI agents to interact with a live Smalltalk
-object memory running in SqueakJS/Caffeine through the Model Context
-Protocol (MCP).
+object memory, through the Model Context Protocol (MCP).
 
 ## Architecture
 
