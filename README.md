@@ -55,3 +55,12 @@ send(
 
 The agent constructs Tether-encoded hex strings, sends them to the
 live Smalltalk image, and interprets the encoded results.
+
+## Workflow of this Project
+
+A user and agent work together through use cases of ever-increasing
+complexity, developing Markdown files explaining what the agent is
+learning about Smalltalk by interacting with it. This will provide
+context to future agents about how to use Smalltalk, and enable pair
+programming with users.
+

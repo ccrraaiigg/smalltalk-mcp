@@ -11,7 +11,7 @@ The 32-bit tag space is divided into ranges:
 | Range | Base Value | Purpose |
 |-------|-----------|---------|
 | `0x70000000` - `0x7FFFFFFF` | `0x70000000` | instructions |
-| `0x60000001` - `0x6FFFFFFF` | `0x60000001` | object proxies |
+| `0x60000000` - `0x6FFFFFFF` | `0x60000000` | object proxies |
 | `0x40000000` - `0x5FFFFFFF` | `0x40000000` | SmallIntegers |
 | `0x20000000` - `0x3FFFFFFF` | `0x20000000` | class tags and special literal values |
 
@@ -22,7 +22,7 @@ the base values:
 
 ```
 if (tag >= 0x70000000) → instruction
-else if (tag >= 0x60000001) → object proxy
+else if (tag >= 0x60000000) → object proxy
 else if (tag >= 0x40000000) → a SmallInteger
 else if (tag >= 0x20000000) → class tag or special value
 else → Error: unsupported encoding
@@ -101,14 +101,21 @@ Format:
 Marks a response to a message send. Followed by the encoded result
 object.
 
-## Proxy Markers (Remote Object References)
+## Object Proxies
 
-**Encoding:** `exposureHash + 0x60000001`
+**Encoding:** `exposureHash`
 
-**Decoding:** `tag - 0x60000001` gives the exposure hash
+**Decoding:** `tag - 0x60000000` gives the exposure hash
 
 These represent objects in the remote object memory. The exposure hash
 is the object's identity hash in its home image.
+
+IMPORTANT: Having received an object proxy as the result of sending a
+message, if you want to use it as the receiver or a parameter in
+another message, you must use the exposure hash, not the tagged
+encoding that you received. Any tag word you use that is greater than
+0x60000000 will be taken by the remote Smalltalk system to indicate a
+reference to an object on *your* side, not its side.
 
 ## Answer Format
 
@@ -197,14 +204,14 @@ leading zeros to pad.
 4. Concatenate: `20000008` + `00000001` + `40000004` = `200000080000000140000004`
 5. Verify: 24 characters = 3 words × 8 chars ✓
 
-### Validation Checklist
+### IMPORTANT: Validation Checklist
 
 Before sending a Tether-encoded parameter:
 
-1. ☐ Count total hex characters - must be divisible by 8
-2. ☐ Verify each word is exactly 8 characters
+1. ☐ Verify each word is exactly 8 characters
+2. ☐ Confirm leading zeros are present where needed
 3. ☐ Check for accidental extra/missing zeros
-4. ☐ Confirm leading zeros are present where needed
+4. ☐ Count total hex characters - must be divisible by 8
 
 ### Example: Encoding `3 + 4`
 
