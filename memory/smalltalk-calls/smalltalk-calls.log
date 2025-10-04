@@ -1,0 +1,15 @@
+
+--- Sending
+ message to peer (43476895) ---
+Selector: class
+Arguments: []
+Purpose: Ask the peer for its class
+Result: 20577454 (peerClass)
+
+
+--- Sending message to peerClass (20577454) ---
+Selector: name
+Arguments: []
+Purpose: Get the name of the peer's class
+Result: "Tether"
+
