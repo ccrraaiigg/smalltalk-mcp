@@ -58,14 +58,18 @@ Communication uses Tether, a binary protocol for remote messaging
 between Caffeine object memories. Message receivers are represented
 by 32-bit unsigned integers, also known as "tags".
 
-**Tag space layout:**
-- `0x60000000+` - non-SmallInteger object references
-- `0x40000000+` - SmallIntegers
+You will only receive and reuse non-SmallInteger object references;
+you will never create them. You will only create a tag for a
+SmallInteger when you use a non-negative integer as a message
+receiver. Currently, the protocol only supports non-negative integers
+and remote Smalltalk objects as receivers.
+
+To get the tag for a non-negative SmallInteger, add 1073741824 to it.
 
 ## First Working Example: 3 + 4
 
 **MCP "send" tool parameters:**
-- Receiver (SmallInteger 3): `{"receiver": 0x40000003}`
+- Receiver (SmallInteger 3): `{"receiver": 1073741827}`
 - Selector: `+`
 - Arguments (Array containing SmallInteger 4, as JSON): `[4]`
 

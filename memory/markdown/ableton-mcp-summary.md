@@ -1,7 +1,10 @@
 # Ableton MCP Project Summary
 
 ## Overview
-The ableton-mcp project is developing MCP tools for Ableton Live 12.3, providing complete coverage of the Live Object Model (LOM) API. The project uses the same Tether/Caffeine technology as the Smalltalk MCP server.
+The ableton-mcp project is developing MCP tools for Ableton Live 12.3,
+providing complete coverage of the Live Object Model (LOM) API. The
+project uses the same Tether/Caffeine technology as the Smalltalk MCP
+server.
 
 ## Current State
 - **Status**: Full tool schema coverage complete (as of Oct 1, 2025)
@@ -74,4 +77,7 @@ Tools are ordered within each class:
    - Parameter: index (integer, -1 to insert at end)
 
 ## Goal for This Session
-Enable livecoding of MCP tool functions directly in Smalltalk, augmenting file-based programming capabilities. This would allow rapid iteration on tool implementations without file editing and server restarts.
+Enable livecoding of MCP tool functions directly in Smalltalk,
+augmenting file-based programming capabilities. This would allow rapid
+iteration on tool implementations without file editing and server
+restarts.
