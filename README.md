@@ -21,18 +21,24 @@ accessible to remote AI agents.
 
 ## How It Works
 
-1. **Agent sends messages** - The AI agent uses the `send` tool to send Smalltalk messages to objects in the live image
-2. **Tether encoding** - Messages are encoded using the Tether binary protocol (see `tether-encoding.md`)
-3. **Live execution** - The Smalltalk image executes the message and returns results
-4. **Semantic accumulation** - The agent builds understanding of the object memory through successive interactions
+1. **Agent gets initial object** - The AI agent uses the `peer` tool to get a reference to the first exposed Smalltalk object (a Tether instance)
+2. **Agent sends messages** - The agent uses the `send` tool to send Smalltalk messages to objects in the live image, passing arguments as JSON
+3. **Bridge translation** - The MCP server translates JSON arguments to Tether binary protocol for transmission to Smalltalk
+4. **Live execution** - The Smalltalk image executes the message and returns Tether-encoded results
+5. **Response translation** - The MCP server translates Tether results back to JSON with object references as integer tags
+6. **Tool call caching** - Every tool call and response is cached by the MCP server as a resource, accessible by timestamp
+7. **Semantic accumulation** - The agent builds understanding of the object memory through successive interactions
+8. **Source code access** - The agent can read method source code via MCP resources (format: `file:///source/<class>/<selector>`)
+9. **Method compilation** - The agent can compile and install new methods using the `compileMethod` tool
 
 ## Key Insight
 
-Agents interact with Smalltalk objects using only their identity
-hashes (32-bit unsigned integers). The agent accumulates semantic
-knowledge about these objects in its context window through
-exploration - sending messages, observing results, and building a
-mental model of the live system.
+Agents interact with Smalltalk objects using only their tags (32-bit
+unsigned integers defined by the Tether protocol). The agent accumulates
+semantic knowledge about these objects in its context window through
+exploration - sending messages, observing results, and building a mental
+model of the live system. The MCP server handles all Tether encoding/decoding,
+so agents work entirely with JSON.
 
 ## Files
 
@@ -46,15 +52,16 @@ To evaluate `3 + 4`:
 
 ```javascript
 send(
-  receiver: "40000003",      // SmallInteger 3
+  receiver: 1073741827,      // SmallInteger 3 (tag: 3 + 1073741824)
   selector: "+",
-  arguments: "200000080000000140000004"  // Array containing SmallInteger 4
+  arguments: "[4]"           // JSON array containing SmallInteger 4
 )
-// Returns: {"result": "40000007"}  // SmallInteger 7
+// Returns: {"result": 1073741831}  // SmallInteger 7 (tag for 7)
 ```
 
-The agent constructs Tether-encoded hex strings, sends them to the
-live Smalltalk image, and interprets the encoded results.
+The agent uses JSON for message arguments while remote object references
+are represented as 32-bit unsigned integers (tags) defined by the Tether
+protocol.
 
 ## Workflow of this Project
 

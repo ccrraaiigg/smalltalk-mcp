@@ -1,0 +1,15 @@
+# Local variables tracking
+memory/local-variables/local-variables.json
+
+# macOS
+.DS_Store
+
+# Editor backups
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Logs
+*.log
+

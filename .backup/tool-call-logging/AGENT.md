@@ -5,22 +5,47 @@ The overall concept of this project is explained in README.md.
 
 ## on using MCP
 
+### log each MCP tool call, before and after the call
+
+BEFORE every attempt to use an MCP tool, enumerate the intended
+parameters to memory/tool-calls/tool-calls.json, in a separate JSON
+object. Do not include a timestamp field in the JSON object. Use a
+consistent pre-flight schema for each call.
+
+BEFORE every attempt to use the Smalltalk MCP server's "send" tool,
+give the user a summary of the message you're about to send, and why
+you want to send it.
+
+AFTER every attempt to use an MCP tool, even if the call times out,
+append a separate JSON object that includes the result and a summary
+of the result, as separate fields. The JSON object MUST also include
+the timestamp provided in the response, verbatim (a simple
+integer). Use a consistent post-flight schema for each call.
+
+Rotate that file when it reaches 10kB in size, by copying it to a
+tool-calls-<number>.json, where number is an increasing three-digit
+zero-padded decimal number.
+
 ### every MCP tool call is cached by the MCP server
 
 Every tool call, including the response, is cached by the MCP server
 as an MCP resource keyed by timestamp. If you find yourself having
 difficulty accurately remembering a tool call response, you can use
-the corresponding timestamp to read the MCP resource.
+the corresponding timestamp from tool-calls.json to read the MCP
+resource.
 
 The set of tool calls is constantly changing and can grow large, so
 specific tool calls don't appear in the resources list. Instead, the
 resources list includes a template, showing the tool call resource URI
 format. That format is file:///calls/<timestamp>.json
 
-Effectively, each tool call result exists in two places, with
+Effectively, each tool call result exists in three places, with
 decreasing fidelity. The ground truth is the MCP server cache. The
 form you store in your context window tends to be less accurate, and
-relatively difficult for the user to access.
+relatively difficult for the user to access. The form you store in
+tool-calls.json is the least accurate, but is easiest for the user to
+access, and may have added value by way of inferences you bring to the
+summary.
 
 ### Kiro doesn't support MCP resources directly
 
@@ -29,9 +54,6 @@ the "listResources" and "readResource" tools provided by the Smalltalk
 MCP server. There is currently no way for you to be notified of
 resource changes, and tool-call cache entries are immutable
 anyway. Therefore, you can't subscribe to any MCP resources.
-
-IMPORTANT: If the Kiro MCP client has been changed to support MCP
-resources, call it out immediately. We'd have to modify this section.
 
 ### MCP tool timeouts
 
@@ -143,10 +165,10 @@ summary of the conversation to a Markdown file.
 
 ## context from past conversations
 
-You might find it useful to read summaries of past conversations
-between agent and user, in memory/conversations/. When asked to write
-Ableton Live MCP tools, memory/conversations/livecoding-mcp.md is
-probably useful.
+You might find it useful to read summaries of past agent/user
+conversations, in memory/conversations/. When asked to write Ableton
+Live MCP tools, memory/conversations/livecoding-mcp.md is probably
+useful.
 
 The memory directory also has summaries of the Ableton Live MCP server
 project, and of the Smalltalk classes.

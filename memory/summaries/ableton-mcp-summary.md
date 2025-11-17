@@ -6,6 +6,8 @@ providing complete coverage of the Live Object Model (LOM) API. The
 project uses the same Tether/Caffeine technology as the Smalltalk MCP
 server.
 
+The repo is at https://github.com/ccrraaiigg/ableton-mcp/.
+
 ## Current State
 - **Status**: Full tool schema coverage complete (as of Oct 1, 2025)
 - **Phase**: Now implementing tool functions through use-case discussions with agents
@@ -49,32 +51,6 @@ Tools are ordered within each class:
 - camelCase for child/property/function names
 - Tool descriptions: complete sentences with capitalization and period
 - Child/property/return descriptions: phrases without capitalization or period
-
-## Development Workflow
-1. Agent checks which MCP tools are actually available
-2. If tool is missing, agent suggests implementation referencing JSON schema
-3. User implements the tool function
-4. Testing is required before declaring success
-
-## Technology Stack
-- JavaScript (vanilla, no TypeScript)
-- No bundling (no webpack)
-- Variables declared at function start
-- Single-line if statements without braces
-
-## Currently Implemented Tools (from connected Ableton MCP server)
-
-1. **mcp_ableton_applicationView_functions_focusView**
-   - Show and focus a named view
-   - Parameter: viewName (string)
-
-2. **mcp_ableton_scene_properties_set_name**
-   - Set the name of a scene
-   - Parameters: scene (object ID or canonical path), name (string)
-
-3. **mcp_ableton_song_functions_createScene**
-   - Create a new scene
-   - Parameter: index (integer, -1 to insert at end)
 
 ## Goal for This Session
 Enable livecoding of MCP tool functions directly in Smalltalk,
