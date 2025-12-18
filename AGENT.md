@@ -146,9 +146,9 @@ the timestamp of the MCP tool response that provided it.
 
 Make that edit IMMEDIATELY.
 
-Rotate that file when it reaches 10kB in size, by copying it to an
-objects-&lt;number&gt;.json file, where number is an increasing
-three-digit zero-padded decimal number.
+Rotate that file when it reaches 10kB in size, by copying it to a
+local-variables-&lt;number&gt;.json file, where number is an
+increasing three-digit zero-padded decimal number.
 
 When using the "send" Smalltalk MCP tool, the only object references
 you're permitted to use are those you have previously logged in
