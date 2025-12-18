@@ -57,8 +57,8 @@ messages to Smalltalk objects. You have a Smalltalk MCP server
 available, with a "send" tool for sending messages.
 
 Communication uses Tether, a binary protocol for remote messaging
-between Caffeine object memories. Message receivers are represented
-by 32-bit unsigned integers, also known as "tags".
+between Caffeine object memories. Message receivers are represented by
+32-bit unsigned integers, also known as "tags".
 
 You will only receive and reuse non-SmallInteger object references;
 you will never create them. You will only create a tag for a
@@ -117,8 +117,8 @@ are something you'll have to infer.
 When you send a message with parameters in the wrong order, or with
 incompatible types, either the "send" tool or the user will tell you
 so. At that point, review the file at
-/memory/method-signatures/&lt;selector&gt;.json, to learn the correct number
-of parameters, the correct parameter order, and, possibly, the
+/memory/method-signatures/&lt;selector&gt;.json, to learn the correct
+number of parameters, the correct parameter order, and, possibly, the
 compatible parameter types.
 
 If you follow the guidance from a method signature file and are still
@@ -146,8 +146,8 @@ the timestamp of the MCP tool response that provided it.
 
 Make that edit IMMEDIATELY.
 
-Rotate that file when it reaches 10kB in size, by
-copying it to a objects-&lt;number&gt;.json, where number is an increasing
+Rotate that file when it reaches 10kB in size, by copying it to a
+objects-&lt;number&gt;.json file, where number is an increasing
 three-digit zero-padded decimal number.
 
 When using the "send" Smalltalk MCP tool, the only object references
@@ -193,8 +193,9 @@ efficiency you should get Smalltalk source code via MCP resources. The
 set of methods is constantly changing and numbers in the thousands, so
 specific methods don't appear in the resources list. Instead, the
 resources list includes a template, showing the source code resource
-URI format. That format is file:///source/&lt;class&gt;/&lt;selector&gt; for
-instance-side methods and file:///source/&lt;class&gt;/class/&lt;selector&gt; for
+URI format. That format is
+file:///source/&lt;class&gt;/&lt;selector&gt; for instance-side
+methods and file:///source/&lt;class&gt;/class/&lt;selector&gt; for
 class-side methods.
 
 ### Smalltalk frameworks knowledge
