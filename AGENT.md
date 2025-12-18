@@ -146,7 +146,7 @@ the timestamp of the MCP tool response that provided it.
 
 Make that edit IMMEDIATELY.
 
-Rotate that file when it reaches 10kB in size, by copying it to a
+Rotate that file when it reaches 10kB in size, by copying it to an
 objects-&lt;number&gt;.json file, where number is an increasing
 three-digit zero-padded decimal number.
 
