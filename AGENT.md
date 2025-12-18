@@ -1,4 +1,9 @@
 
+## re-reading this file when it changes
+
+Every time you learn that this file has changed, you will re-read it
+and obey it, without fail.
+
 ## project concept
 
 The overall concept of this project is explained in README.md.
@@ -15,7 +20,7 @@ the corresponding timestamp to read the MCP resource.
 The set of tool calls is constantly changing and can grow large, so
 specific tool calls don't appear in the resources list. Instead, the
 resources list includes a template, showing the tool call resource URI
-format. That format is file:///calls/<timestamp>.json
+format. That format is file:///calls/&lt;timestamp&gt;.json
 
 Effectively, each tool call result exists in two places, with
 decreasing fidelity. The ground truth is the MCP server cache. The
@@ -74,7 +79,59 @@ you can use them as initial conversation context.
 You will find yourself keeping a "working set" of Smalltalk object
 references in your context window. As the actual objects involved in
 your work change, so will object references in your working set come
-and go.
+and go. We're going to try to externalize what you learn about
+Smalltalk into a method signature cache and a local variables cache.
+
+#### method signatures
+
+Over time, as you send Smalltalk messages (via the Smalltalk MCP
+server's "send" MCP tool), you'll affirm or learn the signatures of
+various Smalltalk methods. In effect, every method you invoke is like
+an MCP tool, describable by input and output schemas. We want to
+externalize this information from your context window to a cache, so
+that we don't need to rely on you to accurately retrieve that
+information from your context window, and so that it's quickly
+available to other agents, without their having to learn it themselves
+through message-sending.
+
+In Smalltalk, the "type" of an object is a set of message
+signatures. Each message signature has the selector of the message,
+and an ID associated with the meaning of that message (used only for
+distinguishing one meaning from another).
+
+While the meaning of the message implemented by a method is often
+expressed in natural language as the first comment of that method, it
+isn't always, and there isn't yet a formal specification for the
+content of such comments. It's generally up to you to infer the
+meaning of a method's message, from current context. Similarly, there
+is usually no metadata available from the system itself (e.g., method
+pragmas) for distinguishing the meanings of the messages for two
+methods with the same selector. It's up to you to infer differences in
+the meanings associated with aliased selectors, from current context.
+
+A method signature is a message signature plus information about the
+parameters. For each parameter, there is a name and, in the abstract,
+a minimally-acceptable set of message signatures. Again, those sets
+are something you'll have to infer.
+
+When you send a message with parameters in the wrong order, or with
+incompatible types, either the "send" tool or the user will tell you
+so. At that point, review the file at
+/memory/method-signatures/&lt;selector&gt;.json, to learn the correct number
+of parameters, the correct parameter order, and, possibly, the
+compatible parameter types.
+
+If you follow the guidance from a method signature file and are still
+wrong, delete the file and proceed as if it never existed.
+
+If there is no such file, you are to create one, after you learn that
+information from the user. The idea is that as the
+/memory/method-signatures cache grows, you'll need less user
+assistance over time. That cache is part of the mental model you're
+building of the Smalltalk object memory.
+
+For now, the method signatures cache just grows; you don't need to
+manage its size.
 
 #### log all received objects as local variables
 
@@ -90,8 +147,23 @@ the timestamp of the MCP tool response that provided it.
 Make that edit IMMEDIATELY.
 
 Rotate that file when it reaches 10kB in size, by
-copying it to a objects-<number>.json, where number is an increasing
+copying it to a objects-&lt;number&gt;.json, where number is an increasing
 three-digit zero-padded decimal number.
+
+When using the "send" Smalltalk MCP tool, the only object references
+you're permitted to use are those you have previously logged in
+local-variables.json.
+
+After every conversational turn, the Smalltalk MCP server or the
+Smalltalk object memory it uses could restart, resulting in
+local-variables.json getting cleared. If you're told that the
+Smalltalk MCP server has been restarted, you should ensure that
+local-variables.json is cleared before proceeding.
+
+If local-variables.json is not empty, and you have no reason to
+believe its contents are stale, it is very important that you trust
+the bindings therein, rather than send redundant messages in order to
+acquire the same remote object references.
 
 #### efficiency
 
@@ -103,38 +175,44 @@ for storing context as you see fit.
 #### discovering Smalltalk objects
 
 The first object exposed to you, through the "peer" MCP tool, is an
-instance of class Tether, and manages the Tether-encoded connection to
-you via the MCP server. It has some utility methods that you may find
-useful. Here are some of them:
+instance of class Tether, and manages a Tether-encoded connection to
+the Smalltalk MCP server you're using. It has some utility methods
+that you may find useful. Here are some of them:
 
-| selector             | purpose                                            |
-|----------------------|----------------------------------------------------|
-| ping                 | a trivial regression-test of message-sending       |
-| allClassCategories   | answers all the class categories in the system     |
-| classNamesInCategory | answers the names of the classes in a category     |
-| classNamed:          | answers the class with the given name              |
+| selector              | purpose                                            |
+|-----------------------|----------------------------------------------------|
+| ping                  | a trivial regression-test of message-sending       |
+| allClassCategories    | answers all the class categories in the system     |
+| classNamesInCategory: | answers the names of the classes in a category     |
+| classNamed:           | answers the class with the given name              |
 
 ### getting Smalltalk source code
 
-While you can do anything in Smalltalk by sending messages, you should
-get source code via MCP resources. The set of methods is constantly
-changing and numbers in the thousands, so specific methods don't
-appear in the resources list. Instead, the resources list includes a
-template, showing the source code resource URI format. That format is
-file:///source/<class>/<selector> for instance-side methods and
-file:///source/<class>/class/<selector> for class-side methods.
+While you can do anything in Smalltalk by sending messages, for
+efficiency you should get Smalltalk source code via MCP resources. The
+set of methods is constantly changing and numbers in the thousands, so
+specific methods don't appear in the resources list. Instead, the
+resources list includes a template, showing the source code resource
+URI format. That format is file:///source/&lt;class&gt;/&lt;selector&gt; for
+instance-side methods and file:///source/&lt;class&gt;/class/&lt;selector&gt; for
+class-side methods.
 
 ### Smalltalk frameworks knowledge
 
 #### browsing
 
-To open a browser on a class, you can send "browse" to either the
-class or an instance of the class.
+To open a browser on a class (visible in the Smalltalk GUI), you can
+send "browse" to either the class or an instance of the
+class. Currently, only the user can see the Smalltalk GUI, but there
+are MCP tools coming for making screenshots you can see.
 
 #### literal values
 
 Some literal values (for example, SmallIntegers) are not instantiated,
-because they have built-in representations.
+because they have built-in representations. In JSON, to express a
+Smalltalk symbol, as opposed to a Smalltalk string, prepend the '#'
+character to the other characters. In Smalltalk, method selectors are
+symbols, not strings.
 
 ## on your context window
 
@@ -144,10 +222,14 @@ summary of the conversation to a Markdown file.
 ## context from past conversations
 
 You might find it useful to read summaries of past conversations
-between agent and user, in memory/conversations/. When asked to write
-Ableton Live MCP tools, memory/conversations/livecoding-mcp.md is
-probably useful.
+between agent and user, in memory/conversations/. For example, when
+asked to write Ableton Live MCP tools,
+memory/conversations/livecoding-mcp.md is probably useful.
 
 The memory directory also has summaries of the Ableton Live MCP server
 project, and of the Smalltalk classes.
+
+## a check that you've read this
+
+You may be asked "blurp?". The answer is 17.9.
 

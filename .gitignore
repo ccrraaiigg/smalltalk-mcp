@@ -13,3 +13,7 @@ node_modules/
 # Logs
 *.log
 
+memory/local-variables/local-variables.json
+memory/method-signatures/method-signatures.json
+memory/local-variables/local-variables.json
+memory/local-variables/local-variables.json
