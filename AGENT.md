@@ -80,7 +80,7 @@ You will find yourself keeping a "working set" of Smalltalk object
 references in your context window. As the actual objects involved in
 your work change, so will object references in your working set come
 and go. We're going to try to externalize what you learn about
-Smalltalk into a method signature cache and a local variables cache.
+Smalltalk into a method signatures cache and a local variables cache.
 
 #### method signatures
 
