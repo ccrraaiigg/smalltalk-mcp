@@ -1,6 +1,24 @@
 # smalltalk-mcp
 an MCP server for livecoding a remote Smalltalk
 
+## Purpose
+
+This project is an AI agent application — a workspace where an AI
+agent and a human programmer collaborate to explore, understand, and
+extend a live Smalltalk system.
+
+The agent's role is to send messages to Smalltalk objects, observe
+results, and build up a semantic model of the running system. Over
+time, the agent and user work together through increasingly complex
+use cases, and the agent's growing knowledge is captured in Markdown
+files and a method-signatures cache in the `memory/` directory. This
+accumulated knowledge primes future agents, reducing the time needed
+to get up to speed.
+
+In short: **the agent is the primary user of this app**, using it to
+livecode a remote Smalltalk image through conversation with a human
+partner.
+
 ## Overview
 
 This project enables AI agents to interact with a live Smalltalk
